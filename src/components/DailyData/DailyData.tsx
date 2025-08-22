@@ -1,5 +1,5 @@
 import type { IDailyData } from '../../types';
-import '../../styles/Colors.css';
+import '../../styles/Colors.scss';
 import { DailyDataCard } from './DailyDataCard';
 
 export const DailyData = ({ dailyData }: { dailyData: IDailyData[] }) => {
@@ -15,7 +15,7 @@ export const DailyData = ({ dailyData }: { dailyData: IDailyData[] }) => {
             .map(({ dt, weather, temp }) => (
               <DailyDataCard
                 key={dt}
-                date={dt}
+                timestamp={dt}
                 temp={temp.day}
                 icon={weather[0].icon}
               />

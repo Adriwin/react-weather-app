@@ -1,4 +1,4 @@
-import './EmptyState.css';
+import './EmptyState.scss';
 
 export const EmptyState = () => {
   return (

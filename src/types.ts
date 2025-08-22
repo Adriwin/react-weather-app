@@ -9,11 +9,18 @@ interface ICommonWeatherData {
   }[];
 }
 
-interface ISpecificWeatherData extends ICommonWeatherData {}
+interface ISpecificWeatherData extends ICommonWeatherData {
+  temp: number;
+  wind_speed: number;
+  pressure: number;
+  visibility: number;
+  humidity: number;
+  clouds: number;
+}
 
-export interface ICurrentData extends ICommonWeatherData {}
+export interface ICurrentData extends ISpecificWeatherData {}
 
-export interface IHourlyData extends ICommonWeatherData {}
+export interface IHourlyData extends ISpecificWeatherData {}
 
 export interface IDailyData extends ICommonWeatherData {
   temp: {
