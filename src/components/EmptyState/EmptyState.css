@@ -1,0 +1,12 @@
+.fadeing-text {
+  animation: fadein 2s infinite alternate;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
