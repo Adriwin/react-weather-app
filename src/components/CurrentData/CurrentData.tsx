@@ -1,10 +1,10 @@
-import type { ICurrentData } from '../../types';
-import '../../styles/Colors.scss';
-import { getSimpleDateFromTimestamp } from '../../utils';
+import type { ICurrentData } from '@/types';
+import '@/styles/Colors.scss';
+import { getSimpleDateFromTimestamp } from '@/utils';
 
 export const CurrentData = ({ currentData }: { currentData: ICurrentData }) => {
   return (
-    <div>
+    <>
       <h2 className="custom-gray">Today</h2>
       <div className="flex flex-row">
         <div className="w-[35%] border-r-2 border-[var(--border-gray)]">
@@ -60,16 +60,18 @@ export const CurrentData = ({ currentData }: { currentData: ICurrentData }) => {
             </div>
             <div className="flex flex-row">
               <span>Index UV: </span>
-              <span className="custom-gray mb-0">{currentData.uvi}</span>
-              <div className="size-2 bg-amber-500 rounded-[50%]" />
+              <span className="custom-gray flex flex-row ml-1">
+                {currentData.uvi}
+                <div className="size-2 bg-amber-500 rounded-[50%]" />
+              </span>
             </div>
             <div>
               <span>Visibility: </span>
-              <span className="custom-gray">{currentData.wind_speed} km/h</span>
+              <span className="custom-gray">{currentData.visibility} m</span>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

@@ -1,7 +1,7 @@
 import {
   getSimpleDateFromTimestamp,
   getDayOfTheWeekFromTimestamp,
-} from '../../utils';
+} from '@/utils';
 
 export const DailyDataCard = ({
   timestamp,

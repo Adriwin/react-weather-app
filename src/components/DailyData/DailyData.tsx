@@ -1,5 +1,5 @@
-import type { IDailyData } from '../../types';
-import '../../styles/Colors.scss';
+import type { IDailyData } from '@/types';
+import '@/styles/Colors.scss';
 import { DailyDataCard } from './DailyDataCard';
 
 export const DailyData = ({ dailyData }: { dailyData: IDailyData[] }) => {
@@ -8,7 +8,7 @@ export const DailyData = ({ dailyData }: { dailyData: IDailyData[] }) => {
   return (
     <>
       <h2 className="custom-gray">Week</h2>
-      <div className="max-h-[40%] overflow-y-auto">
+      <div>
         {dailyData &&
           dailyData
             .filter((dd) => new Date(dd.dt * 1000).toDateString() !== today)
