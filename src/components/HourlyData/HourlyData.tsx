@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import '@/components/HourlyData/HourlyData.scss';
 import { isEmpty } from 'lodash';
+import '@/styles/Colors.scss';
 
 interface IChartData {
   chartKey: string;
@@ -36,6 +37,11 @@ interface ITickContent {
   };
 }
 
+interface IChartKeyArgs {
+  index: number;
+  hData: IHourlyData;
+}
+
 const CustomTooltip = ({ active, payload }: ITooltipContent) => {
   if (!payload?.length) return;
 
@@ -45,43 +51,53 @@ const CustomTooltip = ({ active, payload }: ITooltipContent) => {
 
   if (isEmpty(content.payload) || !content.payload) return;
 
-  // date,icon
+  // weekday,time,icon,description
   const splittedContent = content.payload.chartKey.split(',');
 
-  // TODO: add description from weather[0]
   return (
     <div
-      className="bg-white opacity-90 rounded-md p-1"
-      style={{ visibility: isVisible ? 'visible' : 'hidden' }}
+      className="rounded-md bg-white p-1 opacity-90"
+      style={{
+        visibility: isVisible ? 'visible' : 'hidden',
+      }}
     >
       {isVisible && (
-        <>
-          <p className="font-medium text-lg">{splittedContent[0]}</p>
+        <div className="flex flex-row">
+          <div className="flex flex-col">
+            <>
+              <p className="text-lg font-medium">{splittedContent[0]},</p>
+              <p className="custom-gray !mb-0">{splittedContent[1]}</p>
+            </>
+            <p className="capitalize">{splittedContent[3]}</p>
+          </div>
+
           <img
-            src={`https://openweathermap.org/img/wn/${splittedContent[1]}@2x.png`}
+            className="size-15"
+            src={`https://openweathermap.org/img/wn/${splittedContent[2]}@2x.png`}
             alt="weather-icon"
           />
-        </>
+        </div>
       )}
     </div>
   );
 };
 
 const CustomizedXAxisTick = ({ x, y, payload }: ITickContent) => {
-  // console.log(payload);
   if (isEmpty(payload) || !payload) return;
   if (!payload?.value) return;
-  // date,icon
+  // weekday,time,icon,description
   const splittedPayload = payload.value.split(',');
-  const splittedDate = splittedPayload[0].split(' ');
-  // somehow make this text in a column
+  // TODO: somehow make this text in a column
   return (
-    <g transform={`translate(${x},${y})`}>
-      <text x={0} y={0} textAnchor="middle">
-        {splittedDate[0]}
-        <br />
-        {splittedDate[1]}
-      </text>
+    <g>
+      <g transform={`translate(${x},${y})`}>
+        <text x={0} y={0} textAnchor="middle">
+          {splittedPayload[0]}
+        </text>
+        <text x={0} y={20} textAnchor="middle">
+          {splittedPayload[1]}
+        </text>
+      </g>
     </g>
   );
 };
@@ -91,24 +107,28 @@ export const HourlyData = ({ hourlyData }: { hourlyData: IHourlyData[] }) => {
 
   const chartData: IChartData[] = [];
 
-  hourlyData.forEach((hData, index) => {
+  const getChartKey = ({ index, hData }: IChartKeyArgs): string => {
     const hDataIcon = hData.weather[0].icon;
-    let chartKey = `${
+    const hDataDescription = hData.weather[0].description;
+    const splittedDateTime = (
       getSimpleDateFromTimestamp(hData.dt, {
         weekday: 'short',
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
       }) as string
-    },${hDataIcon}`;
-    if (index === 0) chartKey = `NOW,${hDataIcon}`;
+    ).split(' ');
+    let weekday = splittedDateTime[0];
+    if (index === 0) weekday = 'Today';
+    return `${weekday},${splittedDateTime[1]},${hDataIcon},${hDataDescription}`;
+  };
+
+  hourlyData.forEach((hData, index) => {
     chartData.push({
-      chartKey,
+      chartKey: getChartKey({ index, hData }), // weekday,time,icon,description
       chartValue: Math.round(hData.temp),
     });
   });
-
-  console.log(chartData);
 
   const width =
     chartData.length * 100 < MAX_HOURS_PER_PAGE
@@ -116,16 +136,23 @@ export const HourlyData = ({ hourlyData }: { hourlyData: IHourlyData[] }) => {
       : chartData.length * 100;
 
   return (
-    <div className="pt-6 min-h-[10%] max-h-[55%] border-t-2 border-[var(--border-gray)] overflow-x-auto overflow-y-hidden">
-      <ResponsiveContainer width={width} height={350}>
-        <LineChart accessibilityLayer data={chartData}>
+    <div
+      className="hidden h-[40vh] overflow-x-auto overflow-y-hidden border-t-2
+        border-[var(--border-gray)] pt-6 lg:block xl:h-[40vh] 2xl:h-[45vh]"
+    >
+      <ResponsiveContainer width={width} height="100%">
+        <LineChart
+          accessibilityLayer
+          data={chartData}
+          className="turn-off-focus-outline"
+        >
           <XAxis
             dataKey="chartKey"
             tickLine={false}
             axisLine={false}
-            tickMargin={10}
+            tickMargin={0}
             minTickGap={0}
-            height={100}
+            interval={0}
             tick={<CustomizedXAxisTick />}
           />
           <YAxis
@@ -135,7 +162,7 @@ export const HourlyData = ({ hourlyData }: { hourlyData: IHourlyData[] }) => {
             width={35}
             tick={false}
           />
-          <Tooltip cursor={false} content={<CustomTooltip />} />
+          <Tooltip cursor={false} offset={-160} content={<CustomTooltip />} />
           <Line
             className="line-shadow"
             dataKey="chartValue"

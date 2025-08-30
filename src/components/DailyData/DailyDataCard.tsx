@@ -13,7 +13,7 @@ export const DailyDataCard = ({
   icon: string;
 }) => {
   return (
-    <div className="bg-white opacity-50 rounded-lg mb-6 p-3 shadow-md">
+    <div className="mb-6 rounded-lg bg-[rgba(255,255,255,50)] p-3 shadow-md">
       <p className="text-lg font-medium">
         {getDayOfTheWeekFromTimestamp(timestamp)},
       </p>

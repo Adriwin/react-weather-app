@@ -3,7 +3,7 @@ import './EmptyState.scss';
 export const EmptyState = () => {
   return (
     <>
-      <div className="text-center fadeing-text">
+      <div className="fadeing-text text-center">
         <p>
           Please provide a city/place to check the weather or wait for data
           loading...

@@ -10,13 +10,14 @@ import { skipToken, useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@/components/EmptyState';
 import type { ICurrentData, IHourlyData, IDailyData } from '@/types';
 import { showErrorToast } from '@/utils';
-import responseJson from '@/response.json';
+import AppIcon from '@/../public/app-icon.png';
+import '@/assets/scss/animation.scss';
 
 export const MainPage = () => {
   const [searchText, setSearchText] = useState('');
   const [coordinates, setCoordinates] = useState({
-    latitude: 54.352,
-    longitude: 18.6466,
+    latitude: 0,
+    longitude: 0,
   });
 
   const [currentData, setCurrentData] = useState<ICurrentData | null>(null);
@@ -28,11 +29,10 @@ export const MainPage = () => {
     queryFn:
       coordinates.latitude && coordinates.longitude
         ? async () => {
-            // const response = await fetch(
-            //   `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=metric`
-            // );
-            const r = responseJson;
-            // const r = await response.json();
+            const response = await fetch(
+              `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=metric`
+            );
+            const r = await response.json();
             setCurrentData(r.current);
             setHourlyData(r.hourly);
             setDailyData(r.daily);
@@ -81,21 +81,40 @@ export const MainPage = () => {
   }, [searchText]);
 
   return (
-    <div className="px-40 py-10 w-dvw h-dvh overflow-clip">
-      <SearchBar handleSearchTextChange={debouncedHandleSearchTextChange} />
-      {isPending ? (
-        <EmptyState />
-      ) : (
-        <div className="flex flex-row justify-between h-[calc(95%-2.5rem)]">
-          <div className="w-[70%]">
-            {currentData && <CurrentData currentData={currentData} />}
-            <HourlyData hourlyData={hourlyData} />
+    <div className="relative h-dvh w-dvw lg:px-40 lg:py-10 px-10 py-5 lg:overflow-clip">
+      <div
+        className="lg:absolute lg:top-0 lg:right-0 mt-2 mr-4 mb-2 flex flex-row
+          justify-center"
+      >
+        <img src={AppIcon} className="size-10" />
+        <p className="text-md">The best weather app</p>
+      </div>
+      <div
+        className={`${
+          isPending
+            ? `roll-out relative top-[50%] left-[50%] flex translate-x-[-50%]
+              transform flex-col`
+            : 'h-full' // TODO: after rerender animate the layout
+          }`}
+      >
+        <SearchBar
+          handleSearchTextChange={debouncedHandleSearchTextChange}
+          isPending={isPending}
+        />
+        {isPending ? (
+          <EmptyState />
+        ) : (
+          <div className="lg:flex lg:flex-row justify-between">
+            <div className="lg:w-[70%] w-full">
+              {currentData && <CurrentData currentData={currentData} />}
+              <HourlyData hourlyData={hourlyData} />
+            </div>
+            <div className="lg:w-[30%] xl:w-[20%] w-full">
+              <DailyData dailyData={dailyData} />
+            </div>
           </div>
-          <div className="w-[20%] h-full overflow-y-auto">
-            <DailyData dailyData={dailyData} />
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

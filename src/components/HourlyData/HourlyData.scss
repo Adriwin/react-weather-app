@@ -1,4 +1,10 @@
 .line-shadow {
-  filter: drop-shadow(rgb(77, 77, 77) 1rem 1rem 15px)
+  filter: drop-shadow(rgb(77, 77, 77) 1rem 0.3rem 15px)
     drop-shadow(rgb(161, 161, 161) 1rem 2rem 15px);
+}
+
+.turn-off-focus-outline {
+  svg:focus {
+    outline: none;
+  }
 }
