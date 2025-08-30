@@ -12,6 +12,8 @@ import type { ICurrentData, IHourlyData, IDailyData } from '@/types';
 import { showErrorToast } from '@/utils';
 import AppIcon from '@/../public/app-icon.png';
 import '@/assets/scss/animation.scss';
+import { GEOCODING_API_KEY, OPENWEATHER_API_KEY } from './constants';
+
 
 export const MainPage = () => {
   const [searchText, setSearchText] = useState('');
@@ -30,7 +32,7 @@ export const MainPage = () => {
       coordinates.latitude && coordinates.longitude
         ? async () => {
             const response = await fetch(
-              `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=metric`
+              `https://api.openweathermap.org/data/3.0/onecall?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${OPENWEATHER_API_KEY}&units=metric`
             );
             const r = await response.json();
             setCurrentData(r.current);
@@ -60,7 +62,7 @@ export const MainPage = () => {
   useEffect(() => {
     if (!searchText) return;
     geocode(RequestType.ADDRESS, searchText, {
-      key: import.meta.env.VITE_GEOCODING_API_KEY,
+      key: GEOCODING_API_KEY,
       outputFormat: OutputFormat.JSON,
     })
       .then((response) => {

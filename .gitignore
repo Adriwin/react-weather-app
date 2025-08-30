@@ -208,4 +208,7 @@ src/response.json
 # and uncomment the following lines
 # .pnp.*
 
+# vite
+.vite
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,node,yarn,react
