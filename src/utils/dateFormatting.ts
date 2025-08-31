@@ -1,4 +1,4 @@
-// TODO: change the "en-US" to be connected to chosen language
+// TODO: change the "en-US" to be connected to chosen language -> make language selector
 
 const getCorrectTimestamp = (timestamp: number): number | undefined => {
   if (!timestamp || !Number(timestamp)) return;

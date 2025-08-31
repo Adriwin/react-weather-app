@@ -32,7 +32,7 @@ export const SearchBar = ({
         className={`${isMouseInInput && 'opacity-50'} relative mb-10 rounded-4xl
           bg-white px-8 py-2 text-center opacity-30 hover:shadow-sm
           focus:shadow-sm focus:outline-none
-          ${isPending ? 'w-full' : 'mx-10 w-[80%] md:w-[90%] lg:w-[65%]'}`}
+          ${isPending ? 'w-full' : 'w-[80%] md:w-[90%] lg:mx-10 lg:w-[65%]'}`}
       />
       <div
         className={` ${isMouseInInput && 'visible'} invisible absolute

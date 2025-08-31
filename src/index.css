@@ -16,10 +16,6 @@
   /* custom colors */
   --font-gray: #918d8a;
   --border-gray: #e9dfd7;
-
-  /* scrollbar changes */
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 @import 'tailwindcss';

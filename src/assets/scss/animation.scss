@@ -1,16 +1,3 @@
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.fade-in {
-  animation: fadeIn 500ms ease-in-out;
-}
-
 @keyframes rollout {
   0% {
     transform: translateY(-400px);

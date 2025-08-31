@@ -10,7 +10,8 @@ import {
 } from 'recharts';
 import '@/components/HourlyData/HourlyData.scss';
 import { isEmpty } from 'lodash';
-import '@/styles/Colors.scss';
+import '@/assets/scss/Colors.scss';
+import { WeatherIcon } from '@/components/WeatherIcon/WeatherIcon';
 
 interface IChartData {
   chartKey: string;
@@ -51,7 +52,7 @@ const CustomTooltip = ({ active, payload }: ITooltipContent) => {
 
   if (isEmpty(content.payload) || !content.payload) return;
 
-  // weekday,time,icon,description
+  // weekday,time,icon,description,temp
   const splittedContent = content.payload.chartKey.split(',');
 
   return (
@@ -67,15 +68,13 @@ const CustomTooltip = ({ active, payload }: ITooltipContent) => {
             <>
               <p className="text-lg font-medium">{splittedContent[0]},</p>
               <p className="custom-gray !mb-0">{splittedContent[1]}</p>
+              <p className="text-2xl font-medium">
+                {Math.round(Number(splittedContent[4]))}°C
+              </p>
             </>
             <p className="capitalize">{splittedContent[3]}</p>
           </div>
-
-          <img
-            className="size-15"
-            src={`https://openweathermap.org/img/wn/${splittedContent[2]}@2x.png`}
-            alt="weather-icon"
-          />
+          <WeatherIcon className="size-20" icon={splittedContent[2]} />
         </div>
       )}
     </div>
@@ -85,9 +84,10 @@ const CustomTooltip = ({ active, payload }: ITooltipContent) => {
 const CustomizedXAxisTick = ({ x, y, payload }: ITickContent) => {
   if (isEmpty(payload) || !payload) return;
   if (!payload?.value) return;
-  // weekday,time,icon,description
+
+  // weekday,time,icon,description,temp
   const splittedPayload = payload.value.split(',');
-  // TODO: somehow make this text in a column
+
   return (
     <g>
       <g transform={`translate(${x},${y})`}>
@@ -110,6 +110,7 @@ export const HourlyData = ({ hourlyData }: { hourlyData: IHourlyData[] }) => {
   const getChartKey = ({ index, hData }: IChartKeyArgs): string => {
     const hDataIcon = hData.weather[0].icon;
     const hDataDescription = hData.weather[0].description;
+    const hDataTemp = hData.temp;
     const splittedDateTime = (
       getSimpleDateFromTimestamp(hData.dt, {
         weekday: 'short',
@@ -120,12 +121,12 @@ export const HourlyData = ({ hourlyData }: { hourlyData: IHourlyData[] }) => {
     ).split(' ');
     let weekday = splittedDateTime[0];
     if (index === 0) weekday = 'Today';
-    return `${weekday},${splittedDateTime[1]},${hDataIcon},${hDataDescription}`;
+    return `${weekday},${splittedDateTime[1]},${hDataIcon},${hDataDescription},${hDataTemp}`;
   };
 
   hourlyData.forEach((hData, index) => {
     chartData.push({
-      chartKey: getChartKey({ index, hData }), // weekday,time,icon,description
+      chartKey: getChartKey({ index, hData }), // weekday,time,icon,description,temp
       chartValue: Math.round(hData.temp),
     });
   });
@@ -137,8 +138,8 @@ export const HourlyData = ({ hourlyData }: { hourlyData: IHourlyData[] }) => {
 
   return (
     <div
-      className="hidden h-[40vh] overflow-x-auto overflow-y-hidden border-t-2
-        border-[var(--border-gray)] pt-6 lg:block xl:h-[40vh] 2xl:h-[45vh]"
+      className="hidden h-[38vh] overflow-x-auto overflow-y-hidden border-t-2
+        border-[var(--border-gray)] pt-6 lg:block 2xl:h-[45vh]"
     >
       <ResponsiveContainer width={width} height="100%">
         <LineChart

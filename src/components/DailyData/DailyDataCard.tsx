@@ -2,6 +2,7 @@ import {
   getSimpleDateFromTimestamp,
   getDayOfTheWeekFromTimestamp,
 } from '@/utils';
+import { WeatherIcon } from '@/components/WeatherIcon/WeatherIcon';
 
 export const DailyDataCard = ({
   timestamp,
@@ -13,7 +14,10 @@ export const DailyDataCard = ({
   icon: string;
 }) => {
   return (
-    <div className="mb-6 rounded-lg bg-[rgba(255,255,255,50)] p-3 shadow-md">
+    <div
+      className="mb-6 rounded-lg bg-[rgba(255,255,255,50)] p-3 shadow-md
+        max-lg:text-start"
+    >
       <p className="text-lg font-medium">
         {getDayOfTheWeekFromTimestamp(timestamp)},
       </p>
@@ -27,10 +31,7 @@ export const DailyDataCard = ({
           </p>
           <p className="text-3xl font-medium">{Math.round(temp)}°C</p>
         </div>
-        <img
-          src={`https://openweathermap.org/img/wn/${icon}@2x.png`}
-          alt="weather-icon"
-        />
+        <WeatherIcon icon={icon} />
       </div>
     </div>
   );
